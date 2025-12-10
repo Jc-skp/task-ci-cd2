@@ -1,0 +1,69 @@
+name: GitHub Actions - Workflow Dispatch Template
+run-name: Running - ${{ github.event_name }}
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Select one a tag'
+        type: choice
+        options: ['production', 'staging', 'development', 'test']
+        default: 'staging'
+        required: true
+      resposta:
+        description: 'Esta foi a melhor matéria que você teve?'
+        type: boolean
+        default: true
+      serie:
+        description: 'Digite sua série favorita'
+        type: string
+        default: 'Breaking Bad'
+      ambiente:
+        description: 'Selecione o ambiente de deploy'
+        type: choice
+        options: ['AWS', 'Azure', 'GCP', 'Local']
+        default: 'AWS'
+      notificar:
+        description: 'Enviar notificações?'
+        type: boolean
+        default: false
+
+jobs:
+  on-workflow_dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comentário
+        run: |
+          echo "🚀 WORKFLOW DISPATCH INICIADO"
+          echo "📌 Tag selecionada: ${{ github.event.inputs.tags }}"
+          echo "🎓 Melhor matéria: ${{ github.event.inputs.resposta }}"
+          echo "📺 Série favorita: ${{ github.event.inputs.serie }}"
+          echo "☁️  Ambiente: ${{ github.event.inputs.ambiente }}"
+          echo "🔔 Notificações: ${{ github.event.inputs.notificar }}"
+          
+      - name: Processar inputs combinados
+        run: |
+          echo "🔧 Processando combinação de inputs..."
+          
+          if [ "${{ github.event.inputs.tags }}" == "production" ] && [ "${{ github.event.inputs.ambiente }}" == "AWS" ]; then
+            echo "⚠️  ALERTA: Deploy em produção na AWS requer aprovação!"
+          fi
+          
+          if [ "${{ github.event.inputs.resposta }}" == "true" ]; then
+            echo "🎉 Excelente! Esta matéria realmente é especial!"
+          fi
+          
+          if [ "${{ github.event.inputs.notificar }}" == "true" ]; then
+            echo "📧 Notificações serão enviadas para a equipe"
+          fi
+          
+      - name: Gerar relatório
+        run: |
+          echo "📊 RELATÓRIO FINAL"
+          echo "=================="
+          echo "Timestamp: $(date)"
+          echo "Usuario: ${{ github.actor }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Tags: ${{ github.event.inputs.tags }}"
+          echo "Ambiente: ${{ github.event.inputs.ambiente }}"
+          echo "Série: ${{ github.event.inputs.serie }}"
+          echo "Status: COMPLETADO COM SUCESSO"
